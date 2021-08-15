@@ -28,7 +28,7 @@ let allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 if ($.isNode()) {
-  console.log('$.isNode()：' + $.isNode());
+  // console.log('$.isNode()：' + $.isNode());  //$.isNode()：true
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
