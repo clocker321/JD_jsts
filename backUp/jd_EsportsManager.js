@@ -10,7 +10,7 @@
  ==========================Quantumultx=========================
  [task_local]
  #东东电竞经理
- 0 0-23/2 * * * jd_EsportsManager.js, tag=东东电竞经理, img-url=https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/icon/jd_EsportsManager.png, enabled=true
+ 0 0-23/2 * * * jd_EsportsManager.js, tag=东东电竞经理, img-url=https://raw.githubusercontent.com/clocker321/JD_jsts/master/icon/jd_EsportsManager.png, enabled=true
  =========================Loon=============================
  [Script]
  cron "0 0-23/2 * * *" script-path=jd_EsportsManager.js,tag=东东电竞经理

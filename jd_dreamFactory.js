@@ -1022,8 +1022,8 @@ async function tuanActivity() {
 
 async function joinLeaderTuan() {
   let res = await updateTuanIdsCDN()
-  let res2 = await updateTuanIdsCDN("https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/tools/empty.json")
-  if (!res) res = await updateTuanIdsCDN('https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/tools/empty.json');
+  let res2 = await updateTuanIdsCDN("https://raw.githubusercontent.com/clocker321/JD_jsts/master/tools/empty.json")
+  if (!res) res = await updateTuanIdsCDN('https://raw.githubusercontent.com/clocker321/JD_jsts/master/tools/empty.json');
   $.authorTuanIds = [...(res && res.tuanIds || []), ...(res2 && res2.tuanIds || [])]
   if ($.authorTuanIds && $.authorTuanIds.length) {
     for (let tuanId of $.authorTuanIds) {
