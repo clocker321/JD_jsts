@@ -199,50 +199,51 @@ async function sendNotify(text, desp, params = {}, author = '\n\n仅供用于学
   //由于上述两种微信通知需点击进去才能查看到详情，故text(标题内容)携带了账号序号以及昵称信息，方便不点击也可知道是哪个京东哪个活动
   text = text.match(/.*?(?=\s?-)/g) ? text.match(/.*?(?=\s?-)/g)[0] : text;
   await Promise.all([
+    //chenke 20210818 注释掉没有用的
     BarkNotify(text, desp, params),//iOS Bark APP
-    tgBotNotify(text, desp),//telegram 机器人
-    ddBotNotify(text, desp),//钉钉机器人
+    //tgBotNotify(text, desp),//telegram 机器人
+    //ddBotNotify(text, desp),//钉钉机器人
     qywxBotNotify(text, desp), //企业微信机器人
     qywxamNotify(text, desp), //企业微信应用消息推送
-    iGotNotify(text, desp, params),//iGot
-    goCQhttp(text, desp)  // go-cqhttp
+    //iGotNotify(text, desp, params),//iGot
+    //goCQhttp(text, desp)  // go-cqhttp
   ])
 }
 
-function goCQhttp(text, desp) {
-  if (go_cqhttp_url && go_cqhttp_qq && go_cqhttp_method) {
-    let msg = (text + '\n' + desp).replace("\n\n仅供用于学习", '');
+// function goCQhttp(text, desp) {
+//   if (go_cqhttp_url && go_cqhttp_qq && go_cqhttp_method) {
+//     let msg = (text + '\n' + desp).replace("\n\n仅供用于学习", '');
 
-    let recv_id = ''
-    if (go_cqhttp_method === 'send_private_msg') {
-      recv_id = 'user_id'
-    } else if (go_cqhttp_method === 'send_group_msg') {
-      recv_id = 'group_id'
-    }
+//     let recv_id = ''
+//     if (go_cqhttp_method === 'send_private_msg') {
+//       recv_id = 'user_id'
+//     } else if (go_cqhttp_method === 'send_group_msg') {
+//       recv_id = 'group_id'
+//     }
 
-    return new Promise(resolve => {
-      $.get({
-        url: `http://${go_cqhttp_url}/${go_cqhttp_method}?${recv_id}=${go_cqhttp_qq}&message=${escape(msg)}`
-      }, (err, resp, data) => {
-        if (!err) {
-          try {
-            // console.log(data);
-            data = JSON.parse(data);
-            if (data.retcode === 0 && data.status === 'ok') {
-              console.log('go-cqhttp发送通知消息成功🎉\n')
-            } else {
-              console.log(`go-cqhttp发送通知消息异常\n${JSON.stringify(data)}`)
-            }
-          } catch (e) {
-            $.logErr(e, resp)
-          } finally {
-            resolve(200)
-          }
-        }
-      })
-    })
-  }
-}
+//     return new Promise(resolve => {
+//       $.get({
+//         url: `http://${go_cqhttp_url}/${go_cqhttp_method}?${recv_id}=${go_cqhttp_qq}&message=${escape(msg)}`
+//       }, (err, resp, data) => {
+//         if (!err) {
+//           try {
+//             // console.log(data);
+//             data = JSON.parse(data);
+//             if (data.retcode === 0 && data.status === 'ok') {
+//               console.log('go-cqhttp发送通知消息成功🎉\n')
+//             } else {
+//               console.log(`go-cqhttp发送通知消息异常\n${JSON.stringify(data)}`)
+//             }
+//           } catch (e) {
+//             $.logErr(e, resp)
+//           } finally {
+//             resolve(200)
+//           }
+//         }
+//       })
+//     })
+//   }
+// }
 
 function serverNotify(text, desp, time = 2100) {
   return new Promise(resolve => {
@@ -370,125 +371,125 @@ function BarkNotify(text, desp, params = {}) {
   })
 }
 
-function tgBotNotify(text, desp) {
-  return new Promise(resolve => {
-    if (TG_BOT_TOKEN && TG_USER_ID) {
-      const options = {
-        url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
-        body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true`,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        timeout
-      }
-      if (TG_PROXY_HOST && TG_PROXY_PORT) {
-        const tunnel = require("tunnel");
-        const agent = {
-          https: tunnel.httpsOverHttp({
-            proxy: {
-              host: TG_PROXY_HOST,
-              port: TG_PROXY_PORT * 1,
-              proxyAuth: TG_PROXY_AUTH
-            }
-          })
-        }
-        Object.assign(options, {agent})
-      }
-      $.post(options, (err, resp, data) => {
-        try {
-          if (err) {
-            console.log('telegram发送通知消息失败！！\n')
-            console.log(err);
-          } else {
-            data = JSON.parse(data);
-            if (data.ok) {
-              console.log('Telegram发送通知消息成功🎉。\n')
-            } else if (data.error_code === 400) {
-              console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n')
-            } else if (data.error_code === 401) {
-              console.log('Telegram bot token 填写错误。\n')
-            }
-          }
-        } catch (e) {
-          $.logErr(e, resp);
-        } finally {
-          resolve(data);
-        }
-      })
-    } else {
-      console.log('您未提供telegram机器人推送所需的TG_BOT_TOKEN和TG_USER_ID，取消telegram推送消息通知🚫\n');
-      resolve()
-    }
-  })
-}
+// function tgBotNotify(text, desp) {
+//   return new Promise(resolve => {
+//     if (TG_BOT_TOKEN && TG_USER_ID) {
+//       const options = {
+//         url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
+//         body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true`,
+//         headers: {
+//           'Content-Type': 'application/x-www-form-urlencoded'
+//         },
+//         timeout
+//       }
+//       if (TG_PROXY_HOST && TG_PROXY_PORT) {
+//         const tunnel = require("tunnel");
+//         const agent = {
+//           https: tunnel.httpsOverHttp({
+//             proxy: {
+//               host: TG_PROXY_HOST,
+//               port: TG_PROXY_PORT * 1,
+//               proxyAuth: TG_PROXY_AUTH
+//             }
+//           })
+//         }
+//         Object.assign(options, {agent})
+//       }
+//       $.post(options, (err, resp, data) => {
+//         try {
+//           if (err) {
+//             console.log('telegram发送通知消息失败！！\n')
+//             console.log(err);
+//           } else {
+//             data = JSON.parse(data);
+//             if (data.ok) {
+//               console.log('Telegram发送通知消息成功🎉。\n')
+//             } else if (data.error_code === 400) {
+//               console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n')
+//             } else if (data.error_code === 401) {
+//               console.log('Telegram bot token 填写错误。\n')
+//             }
+//           }
+//         } catch (e) {
+//           $.logErr(e, resp);
+//         } finally {
+//           resolve(data);
+//         }
+//       })
+//     } else {
+//       console.log('您未提供telegram机器人推送所需的TG_BOT_TOKEN和TG_USER_ID，取消telegram推送消息通知🚫\n');
+//       resolve()
+//     }
+//   })
+// }
 
-function ddBotNotify(text, desp) {
-  return new Promise(resolve => {
-    const options = {
-      url: `https://oapi.dingtalk.com/robot/send?access_token=${DD_BOT_TOKEN}`,
-      json: {
-        "msgtype": "text",
-        "text": {
-          "content": ` ${text}\n\n${desp}`
-        }
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout
-    }
-    if (DD_BOT_TOKEN && DD_BOT_SECRET) {
-      const crypto = require('crypto');
-      const dateNow = Date.now();
-      const hmac = crypto.createHmac('sha256', DD_BOT_SECRET);
-      hmac.update(`${dateNow}\n${DD_BOT_SECRET}`);
-      const result = encodeURIComponent(hmac.digest('base64'));
-      options.url = `${options.url}&timestamp=${dateNow}&sign=${result}`;
-      $.post(options, (err, resp, data) => {
-        try {
-          if (err) {
-            console.log('钉钉发送通知消息失败！！\n')
-            console.log(err);
-          } else {
-            data = JSON.parse(data);
-            if (data.errcode === 0) {
-              console.log('钉钉发送通知消息成功🎉。\n')
-            } else {
-              console.log(`${data.errmsg}\n`)
-            }
-          }
-        } catch (e) {
-          $.logErr(e, resp);
-        } finally {
-          resolve(data);
-        }
-      })
-    } else if (DD_BOT_TOKEN) {
-      $.post(options, (err, resp, data) => {
-        try {
-          if (err) {
-            console.log('钉钉发送通知消息失败！！\n')
-            console.log(err);
-          } else {
-            data = JSON.parse(data);
-            if (data.errcode === 0) {
-              console.log('钉钉发送通知消息完成。\n')
-            } else {
-              console.log(`${data.errmsg}\n`)
-            }
-          }
-        } catch (e) {
-          $.logErr(e, resp);
-        } finally {
-          resolve(data);
-        }
-      })
-    } else {
-      console.log('您未提供钉钉机器人推送所需的DD_BOT_TOKEN或者DD_BOT_SECRET，取消钉钉推送消息通知🚫\n');
-      resolve()
-    }
-  })
-}
+// function ddBotNotify(text, desp) {
+//   return new Promise(resolve => {
+//     const options = {
+//       url: `https://oapi.dingtalk.com/robot/send?access_token=${DD_BOT_TOKEN}`,
+//       json: {
+//         "msgtype": "text",
+//         "text": {
+//           "content": ` ${text}\n\n${desp}`
+//         }
+//       },
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       timeout
+//     }
+//     if (DD_BOT_TOKEN && DD_BOT_SECRET) {
+//       const crypto = require('crypto');
+//       const dateNow = Date.now();
+//       const hmac = crypto.createHmac('sha256', DD_BOT_SECRET);
+//       hmac.update(`${dateNow}\n${DD_BOT_SECRET}`);
+//       const result = encodeURIComponent(hmac.digest('base64'));
+//       options.url = `${options.url}&timestamp=${dateNow}&sign=${result}`;
+//       $.post(options, (err, resp, data) => {
+//         try {
+//           if (err) {
+//             console.log('钉钉发送通知消息失败！！\n')
+//             console.log(err);
+//           } else {
+//             data = JSON.parse(data);
+//             if (data.errcode === 0) {
+//               console.log('钉钉发送通知消息成功🎉。\n')
+//             } else {
+//               console.log(`${data.errmsg}\n`)
+//             }
+//           }
+//         } catch (e) {
+//           $.logErr(e, resp);
+//         } finally {
+//           resolve(data);
+//         }
+//       })
+//     } else if (DD_BOT_TOKEN) {
+//       $.post(options, (err, resp, data) => {
+//         try {
+//           if (err) {
+//             console.log('钉钉发送通知消息失败！！\n')
+//             console.log(err);
+//           } else {
+//             data = JSON.parse(data);
+//             if (data.errcode === 0) {
+//               console.log('钉钉发送通知消息完成。\n')
+//             } else {
+//               console.log(`${data.errmsg}\n`)
+//             }
+//           }
+//         } catch (e) {
+//           $.logErr(e, resp);
+//         } finally {
+//           resolve(data);
+//         }
+//       })
+//     } else {
+//       console.log('您未提供钉钉机器人推送所需的DD_BOT_TOKEN或者DD_BOT_SECRET，取消钉钉推送消息通知🚫\n');
+//       resolve()
+//     }
+//   })
+// }
 
 function qywxBotNotify(text, desp) {
   return new Promise(resolve => {
@@ -661,49 +662,49 @@ function qywxamNotify(text, desp) {
   });
 }
 
-function iGotNotify(text, desp, params = {}) {
-  return new Promise(resolve => {
-    if (IGOT_PUSH_KEY) {
-      // 校验传入的IGOT_PUSH_KEY是否有效
-      const IGOT_PUSH_KEY_REGX = new RegExp("^[a-zA-Z0-9]{24}$")
-      if (!IGOT_PUSH_KEY_REGX.test(IGOT_PUSH_KEY)) {
-        console.log('您所提供的IGOT_PUSH_KEY无效\n')
-        resolve()
-        return
-      }
-      const options = {
-        url: `https://push.hellyw.com/${IGOT_PUSH_KEY.toLowerCase()}`,
-        body: `title=${text}&content=${desp}&${querystring.stringify(params)}`,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        timeout
-      }
-      $.post(options, (err, resp, data) => {
-        try {
-          if (err) {
-            console.log('发送通知调用API失败！！\n')
-            console.log(err);
-          } else {
-            if (typeof data === 'string') data = JSON.parse(data);
-            if (data.ret === 0) {
-              console.log('iGot发送通知消息成功🎉\n')
-            } else {
-              console.log(`iGot发送通知消息失败：${data.errMsg}\n`)
-            }
-          }
-        } catch (e) {
-          $.logErr(e, resp);
-        } finally {
-          resolve(data);
-        }
-      })
-    } else {
-      console.log('您未提供iGot的推送IGOT_PUSH_KEY，取消iGot推送消息通知🚫\n');
-      resolve()
-    }
-  })
-}
+// function iGotNotify(text, desp, params = {}) {
+//   return new Promise(resolve => {
+//     if (IGOT_PUSH_KEY) {
+//       // 校验传入的IGOT_PUSH_KEY是否有效
+//       const IGOT_PUSH_KEY_REGX = new RegExp("^[a-zA-Z0-9]{24}$")
+//       if (!IGOT_PUSH_KEY_REGX.test(IGOT_PUSH_KEY)) {
+//         console.log('您所提供的IGOT_PUSH_KEY无效\n')
+//         resolve()
+//         return
+//       }
+//       const options = {
+//         url: `https://push.hellyw.com/${IGOT_PUSH_KEY.toLowerCase()}`,
+//         body: `title=${text}&content=${desp}&${querystring.stringify(params)}`,
+//         headers: {
+//           'Content-Type': 'application/x-www-form-urlencoded'
+//         },
+//         timeout
+//       }
+//       $.post(options, (err, resp, data) => {
+//         try {
+//           if (err) {
+//             console.log('发送通知调用API失败！！\n')
+//             console.log(err);
+//           } else {
+//             if (typeof data === 'string') data = JSON.parse(data);
+//             if (data.ret === 0) {
+//               console.log('iGot发送通知消息成功🎉\n')
+//             } else {
+//               console.log(`iGot发送通知消息失败：${data.errMsg}\n`)
+//             }
+//           }
+//         } catch (e) {
+//           $.logErr(e, resp);
+//         } finally {
+//           resolve(data);
+//         }
+//       })
+//     } else {
+//       console.log('您未提供iGot的推送IGOT_PUSH_KEY，取消iGot推送消息通知🚫\n');
+//       resolve()
+//     }
+//   })
+// }
 
 function pushPlusNotify(text, desp) {
   return new Promise(resolve => {

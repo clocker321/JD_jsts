@@ -2,7 +2,7 @@
  "name": "task gallery",
  "description": "",
  "task": [
-    {"config":"2 9 * * * https://raw.githubusercontent.com/clocker321/JD_jsts/master/jd_bean_change.js, tag=京东资产变动通知, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true", "addons":"https://raw.githubusercontent.com/clocker321/JD_jsts/master/QuantumultX/cookies.conf"},
+    {"config":"33 9 * * * https://raw.githubusercontent.com/clocker321/JD_jsts/master/jd_bean_change.js, tag=京东资产变动通知, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true", "addons":"https://raw.githubusercontent.com/clocker321/JD_jsts/master/QuantumultX/cookies.conf"},
     {"config":"10 7 * * * https://raw.githubusercontent.com/clocker321/JD_jsts/master/jd_bean_home.js, tag=领京豆额外奖励, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_bean_home.png, enabled=true", "addons":"https://raw.githubusercontent.com/clocker321/JD_jsts/master/QuantumultX/cookies.conf"},
     {"config":"20 * * * * https://raw.githubusercontent.com/clocker321/JD_jsts/master/jd_big_winner.js, tag=省钱大赢家之翻翻乐, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true", "addons":"https://raw.githubusercontent.com/clocker321/JD_jsts/master/QuantumultX/cookies.conf"},
     {"config":"0 0 0 * * * https://raw.githubusercontent.com/clocker321/JD_jsts/master/jd_blueCoin.js, tag=东东超市兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true", "addons":"https://raw.githubusercontent.com/clocker321/JD_jsts/master/QuantumultX/cookies.conf"},
